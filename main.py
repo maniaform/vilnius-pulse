@@ -22,13 +22,19 @@ def paleisti_redakcija():
 
     galutinis_irasas = {
         "id": failo_id,
-        "event_name": straipsnis["event_name"],
         "date_published": siandien,
+        "event_name": straipsnis["event_name"],
+        "event_name_en": straipsnis.get("event_name_en", straipsnis["event_name"]),
         "event_date": straipsnis["event_date"],
+        "event_date_en": straipsnis.get("event_date_en", straipsnis["event_date"]),
         "location": straipsnis["location"],
+        "location_en": straipsnis.get("location_en", straipsnis["location"]),
         "title": straipsnis["title"],
+        "title_en": straipsnis.get("title_en", straipsnis["title"]),
         "summary": straipsnis["summary"],
+        "summary_en": straipsnis.get("summary_en", straipsnis["summary"]),
         "content": straipsnis["content"],
+        "content_en": straipsnis.get("content_en", straipsnis["content"]),
         "image_url": paveikslo_kelias
     }
 
