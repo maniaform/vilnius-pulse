@@ -1,0 +1,39 @@
+name: Dienos renginio generavimas
+
+on:
+  schedule:
+    # Paleidžia kasdien 05:00 UTC laiku (tai yra 07:00 ryte Lietuvos laiku)
+    - cron: '0 5 * * *'
+  workflow_dispatch: # Leidžia paleisti rankiniu būdu mygtuko paspaudimu bet kada
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Paimti failus
+        uses: actions/checkout@v4
+
+      - name: Paruošti Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Įdiegti bibliotekas
+        run: pip install requests
+
+      - name: Paleisti DI redakciją
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+        run: python main.py
+
+      - name: Išsaugoti naują straipsnį ir paveikslėlį
+        run: |
+          git config --local user.email "bot@vilniauspulsas.lt"
+          git config --local user.name "DI Redakcija"
+          git add articles.json images/
+          git commit -m "Naujas dienos renginys" || exit 0
+          git push
