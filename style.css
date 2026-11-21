@@ -406,3 +406,35 @@ h1, h2, h3, h4, .serif-title {
         font-size: 1.75rem;
     }
 }
+
+/* --- KALBOS PERJUNGIKLIS --- */
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.lang-switch {
+    display: inline-flex;
+    background: rgba(17, 24, 39, 0.08);
+    padding: 3px;
+    border-radius: 8px;
+    border: 1px solid var(--border-ink);
+}
+
+.lang-btn {
+    background: transparent;
+    border: none;
+    padding: 5px 10px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 6px;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+}
+
+.lang-btn.active {
+    background: var(--bg-dark);
+    color: #ffffff;
+}
