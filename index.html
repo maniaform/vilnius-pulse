@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vilniaus Pulsas | Dienos renginys</title>
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="masthead">
+        <div class="container masthead-top">
+            <h1 class="brand-title">Vilniaus <span>Pulsas.</span></h1>
+            <div class="live-badge">
+                <span class="pulse-dot"></span>
+                <span>DI Redakcija • Kasdien 07:00</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container editorial-layout">
+        <!-- Kairysis stulpelis: Dienos straipsnis -->
+        <section id="featured-section"></section>
+
+        <!-- Dešinysis stulpelis: Renginio pasas ir Archyvas -->
+        <aside class="sidebar">
+            <div id="ticket-section"></div>
+            <div class="archive-box">
+                <h3 class="archive-box-title">Ankstesni atradimai</h3>
+                <div id="archive-list"></div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Modalinis langas archyvui -->
+    <div id="article-modal" class="modal-backdrop" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div id="modal-body-content"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p><strong>Vilniaus Pulsas</strong> — autonominis sostinės kultūros gidas.</p>
+            <p style="margin-top: 6px; font-size: 0.78rem;">Atranką, faktų patikrą, tekstus ir iliustracijas kasdien kuria DI agentų sistema.</p>
+        </div>
+    </footer>
+
+    <script>
+        let allArticles = [];
+
+        async function initSite() {
+            try {
+                const response = await fetch('articles.json?v=' + new Date().getTime());
+                allArticles = await response.json();
+
+                if (!allArticles || allArticles.length === 0) return;
+
+                renderFeatured(allArticles[0]);
+                renderTicket(allArticles[0]);
+                renderArchive(allArticles.slice(1));
+            } catch (error) {
+                console.error("Klaida kraunant duomenis:", error);
+            }
+        }
+
+        function formatParagraphs(text) {
+            return text.split('\n\n')
+                .filter(p => p.trim() !== '')
+                .map(p => `<p>${p}</p>`)
+                .join('');
+        }
+
+        function renderFeatured(article) {
+            document.getElementById('featured-section').innerHTML = `
+                <article class="featured-card">
+                    <div class="article-header-row">
+                        <div class="mini-thumbnail">
+                            <img src="${article.image_url}" alt="${article.title}">
+                        </div>
+                        <div class="header-text-block">
+                            <span class="kicker">✦ Dienos pasirinkimas</span>
+                            <h2 class="featured-title">${article.title}</h2>
+                        </div>
+                    </div>
+                    <p class="featured-summary">${article.summary}</p>
+                    <div class="article-content">
+                        ${formatParagraphs(article.content)}
+                    </div>
+                </article>
+            `;
+        }
+
+        function renderTicket(article) {
+            document.getElementById('ticket-section').innerHTML = `
+                <div class="ticket-box">
+                    <span class="ticket-label">🎟️ Renginio pasas</span>
+                    <h3 class="ticket-event-name">${article.event_name}</h3>
+                    <div class="ticket-detail">
+                        <span>📅</span>
+                        <span><strong>Kada:</strong> ${article.event_date}</span>
+                    </div>
+                    <div class="ticket-detail">
+                        <span>📍</span>
+                        <span><strong>Kur:</strong> ${article.location}</span>
+                    </div>
+                    <hr class="ticket-divider">
+                    <div class="ticket-footer">
+                        Paskelbta: ${article.date_published} • Patikrinta DI redaktoriaus
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderArchive(articles) {
+            const list = document.getElementById('archive-list');
+            if (articles.length === 0) {
+                list.innerHTML = `<p style="font-size: 0.85rem; color: var(--text-muted);">Daugiau įrašų atsiras rytoj 07:00.</p>`;
+                return;
+            }
+
+            list.innerHTML = articles.map((art, index) => `
+                <div class="archive-item" onclick="openModal(${index + 1})">
+                    <img src="${art.image_url}" alt="${art.title}" class="archive-thumb">
+                    <div>
+                        <h4 class="archive-item-title">${art.title}</h4>
+                        <div class="archive-item-date">${art.event_date}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openModal(articleIndex) {
+            const art = allArticles[articleIndex];
+            if (!art) return;
+
+            document.getElementById('modal-body-content').innerHTML = `
+                <div class="article-header-row">
+                    <div class="mini-thumbnail" style="width: 84px; height: 84px;">
+                        <img src="${art.image_url}" alt="${art.title}">
+                    </div>
+                    <div class="header-text-block">
+                        <span class="kicker">${art.event_date} • ${art.location}</span>
+                        <h2 class="featured-title" style="font-size: 1.75rem;">${art.title}</h2>
+                    </div>
+                </div>
+                <p class="featured-summary">${art.summary}</p>
+                <div class="article-content">
+                    ${formatParagraphs(art.content)}
+                </div>
+            `;
+            document.getElementById('article-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('article-modal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        initSite();
+    </script>
+</body>
+</html>
