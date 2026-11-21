@@ -55,7 +55,8 @@ def parasyti_straipsni(faktai):
     tekstas = sablonas.replace("{faktai}", faktai)
     nurodymas = (
         '\n\nGrąžink TIK gryną JSON objektą be jokio papildomo teksto su šiais raktais: '
-        '"event_name", "event_date", "location", "title", "summary", "content", "image_prompt".'
+        '"event_name", "event_name_en", "event_date", "event_date_en", "location", "location_en", '
+        '"title", "title_en", "summary", "summary_en", "content", "content_en", "image_prompt".'
     )
     messages = [{"role": "user", "content": tekstas + nurodymas}]
     atsakas = siusti_uzklausa(
@@ -63,6 +64,6 @@ def parasyti_straipsni(faktai):
         modelis="openai/gpt-oss-120b", 
         temperature=0.7, 
         json_mode=True, 
-        max_tokens=2500
+        max_tokens=3500
     )
     return json.loads(atsakas)
