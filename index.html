@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vilniaus Pulsas | Dienos renginys</title>
+    <title>Vilniaus Pulsas | Vilnius Pulse</title>
     <link rel="preconnect" href="https://googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,29 +13,32 @@
 
     <header class="masthead">
         <div class="container masthead-top">
-            <h1 class="brand-title">Vilniaus <span>Pulsas.</span></h1>
-            <div class="live-badge">
-                <span class="pulse-dot"></span>
-                <span>DI Redakcija • Kasdien 07:00</span>
+            <h1 class="brand-title" id="ui-brand">Vilniaus <span>Pulsas.</span></h1>
+            <div class="header-controls">
+                <div class="live-badge">
+                    <span class="pulse-dot"></span>
+                    <span id="ui-live">DI Redakcija • Kasdien 07:00</span>
+                </div>
+                <div class="lang-switch">
+                    <button class="lang-btn active" id="btn-lt" onclick="setLanguage('lt')">LT</button>
+                    <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
+                </div>
             </div>
         </div>
     </header>
 
     <main class="container editorial-layout">
-        <!-- Kairysis stulpelis: Dienos straipsnis -->
         <section id="featured-section"></section>
 
-        <!-- Dešinysis stulpelis: Renginio pasas ir Archyvas -->
         <aside class="sidebar">
             <div id="ticket-section"></div>
             <div class="archive-box">
-                <h3 class="archive-box-title">Ankstesni atradimai</h3>
+                <h3 class="archive-box-title" id="ui-archive-title">Ankstesni atradimai</h3>
                 <div id="archive-list"></div>
             </div>
         </aside>
     </main>
 
-    <!-- Modalinis langas archyvui -->
     <div id="article-modal" class="modal-backdrop" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="modal-close" onclick="closeModal()">&times;</button>
@@ -45,19 +48,77 @@
 
     <footer class="footer">
         <div class="container">
-            <p><strong>Vilniaus Pulsas</strong> — autonominis sostinės kultūros gidas.</p>
-            <p style="margin-top: 6px; font-size: 0.78rem;">Atranką, faktų patikrą, tekstus ir iliustracijas kasdien kuria DI agentų sistema.</p>
+            <p id="ui-footer-1"><strong>Vilniaus Pulsas</strong> — autonominis sostinės kultūros gidas.</p>
+            <p id="ui-footer-2" style="margin-top: 6px; font-size: 0.78rem;">Atranką, faktų patikrą, tekstus ir iliustracijas kasdien kuria DI agentų sistema.</p>
         </div>
     </footer>
 
     <script>
         let allArticles = [];
+        let currentLang = 'lt';
+
+        const uiText = {
+            lt: {
+                brand: 'Vilniaus <span>Pulsas.</span>',
+                live: 'DI Redakcija • Kasdien 07:00',
+                kicker: '✦ Dienos pasirinkimas',
+                ticketLabel: '🎟️ Renginio pasas',
+                when: 'Kada:',
+                where: 'Kur:',
+                published: 'Paskelbta:',
+                verified: 'Patikrinta DI redaktoriaus',
+                archiveTitle: 'Ankstesni atradimai',
+                noArchive: 'Daugiau įrašų atsiras rytoj 07:00.',
+                footer1: '<strong>Vilniaus Pulsas</strong> — autonominis sostinės kultūros gidas.',
+                footer2: 'Atranką, faktų patikrą, tekstus ir iliustracijas kasdien kuria DI agentų sistema.'
+            },
+            en: {
+                brand: 'Vilnius <span>Pulse.</span>',
+                live: 'AI Editorial • Daily 07:00',
+                kicker: '✦ Pick of the Day',
+                ticketLabel: '🎟️ Event Pass',
+                when: 'When:',
+                where: 'Where:',
+                published: 'Published:',
+                verified: 'Verified by AI Editor',
+                archiveTitle: 'Past Discoveries',
+                noArchive: 'More discoveries arriving tomorrow at 07:00.',
+                footer1: '<strong>Vilnius Pulse</strong> — autonomous cultural guide to the capital.',
+                footer2: 'Curation, fact-checking, copywriting, and illustrations powered daily by AI agents.'
+            }
+        };
+
+        function getField(article, fieldName) {
+            if (currentLang === 'en' && article[fieldName + '_en']) {
+                return article[fieldName + '_en'];
+            }
+            return article[fieldName];
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            document.getElementById('btn-lt').classList.toggle('active', lang === 'lt');
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+
+            const t = uiText[lang];
+            document.getElementById('ui-brand').innerHTML = t.brand;
+            document.getElementById('ui-live').textContent = t.live;
+            document.getElementById('ui-archive-title').textContent = t.archiveTitle;
+            document.getElementById('ui-footer-1').innerHTML = t.footer1;
+            document.getElementById('ui-footer-2').textContent = t.footer2;
+
+            if (allArticles.length > 0) {
+                renderFeatured(allArticles[0]);
+                renderTicket(allArticles[0]);
+                renderArchive(allArticles.slice(1));
+            }
+        }
 
         async function initSite() {
             try {
                 const response = await fetch('articles.json?v=' + new Date().getTime());
                 allArticles = await response.json();
-
                 if (!allArticles || allArticles.length === 0) return;
 
                 renderFeatured(allArticles[0]);
@@ -76,59 +137,62 @@
         }
 
         function renderFeatured(article) {
+            const t = uiText[currentLang];
             document.getElementById('featured-section').innerHTML = `
                 <article class="featured-card">
                     <div class="article-header-row">
                         <div class="mini-thumbnail">
-                            <img src="${article.image_url}" alt="${article.title}">
+                            <img src="${article.image_url}" alt="${getField(article, 'title')}">
                         </div>
                         <div class="header-text-block">
-                            <span class="kicker">✦ Dienos pasirinkimas</span>
-                            <h2 class="featured-title">${article.title}</h2>
+                            <span class="kicker">${t.kicker}</span>
+                            <h2 class="featured-title">${getField(article, 'title')}</h2>
                         </div>
                     </div>
-                    <p class="featured-summary">${article.summary}</p>
+                    <p class="featured-summary">${getField(article, 'summary')}</p>
                     <div class="article-content">
-                        ${formatParagraphs(article.content)}
+                        ${formatParagraphs(getField(article, 'content'))}
                     </div>
                 </article>
             `;
         }
 
         function renderTicket(article) {
+            const t = uiText[currentLang];
             document.getElementById('ticket-section').innerHTML = `
                 <div class="ticket-box">
-                    <span class="ticket-label">🎟️ Renginio pasas</span>
-                    <h3 class="ticket-event-name">${article.event_name}</h3>
+                    <span class="ticket-label">${t.ticketLabel}</span>
+                    <h3 class="ticket-event-name">${getField(article, 'event_name')}</h3>
                     <div class="ticket-detail">
                         <span>📅</span>
-                        <span><strong>Kada:</strong> ${article.event_date}</span>
+                        <span><strong>${t.when}</strong> ${getField(article, 'event_date')}</span>
                     </div>
                     <div class="ticket-detail">
                         <span>📍</span>
-                        <span><strong>Kur:</strong> ${article.location}</span>
+                        <span><strong>${t.where}</strong> ${getField(article, 'location')}</span>
                     </div>
                     <hr class="ticket-divider">
                     <div class="ticket-footer">
-                        Paskelbta: ${article.date_published} • Patikrinta DI redaktoriaus
+                        ${t.published} ${article.date_published} • ${t.verified}
                     </div>
                 </div>
             `;
         }
 
         function renderArchive(articles) {
+            const t = uiText[currentLang];
             const list = document.getElementById('archive-list');
             if (articles.length === 0) {
-                list.innerHTML = `<p style="font-size: 0.85rem; color: var(--text-muted);">Daugiau įrašų atsiras rytoj 07:00.</p>`;
+                list.innerHTML = `<p style="font-size: 0.85rem; color: var(--text-muted);">${t.noArchive}</p>`;
                 return;
             }
 
             list.innerHTML = articles.map((art, index) => `
                 <div class="archive-item" onclick="openModal(${index + 1})">
-                    <img src="${art.image_url}" alt="${art.title}" class="archive-thumb">
+                    <img src="${art.image_url}" alt="${getField(art, 'title')}" class="archive-thumb">
                     <div>
-                        <h4 class="archive-item-title">${art.title}</h4>
-                        <div class="archive-item-date">${art.event_date}</div>
+                        <h4 class="archive-item-title">${getField(art, 'title')}</h4>
+                        <div class="archive-item-date">${getField(art, 'event_date')}</div>
                     </div>
                 </div>
             `).join('');
@@ -141,16 +205,16 @@
             document.getElementById('modal-body-content').innerHTML = `
                 <div class="article-header-row">
                     <div class="mini-thumbnail" style="width: 84px; height: 84px;">
-                        <img src="${art.image_url}" alt="${art.title}">
+                        <img src="${art.image_url}" alt="${getField(art, 'title')}">
                     </div>
                     <div class="header-text-block">
-                        <span class="kicker">${art.event_date} • ${art.location}</span>
-                        <h2 class="featured-title" style="font-size: 1.75rem;">${art.title}</h2>
+                        <span class="kicker">${getField(art, 'event_date')} • ${getField(art, 'location')}</span>
+                        <h2 class="featured-title" style="font-size: 1.75rem;">${getField(art, 'title')}</h2>
                     </div>
                 </div>
-                <p class="featured-summary">${art.summary}</p>
+                <p class="featured-summary">${getField(art, 'summary')}</p>
                 <div class="article-content">
-                    ${formatParagraphs(art.content)}
+                    ${formatParagraphs(getField(art, 'content'))}
                 </div>
             `;
             document.getElementById('article-modal').classList.add('active');
