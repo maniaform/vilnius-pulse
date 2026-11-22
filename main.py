@@ -35,6 +35,7 @@ def paleisti_redakcija():
         "summary_en": straipsnis.get("summary_en", straipsnis["summary"]),
         "content": straipsnis["content"],
         "content_en": straipsnis.get("content_en", straipsnis["content"]),
+        "source_url": straipsnis.get("source_url", ""),
         "image_url": paveikslo_kelias
     }
 
