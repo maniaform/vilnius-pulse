@@ -4,7 +4,7 @@ import requests
 from storage import nuskaityti_faila
 
 API_KEY = os.environ.get("GROQ_API_KEY")
-GROQ_URL = "https://api.groq.com" + "/openai/v1/chat/completions"
+GROQ_URL = "https://groq.com" + "/openai/v1/chat/completions"
 
 def siusti_uzklausa(messages, modelis="qwen/qwen3.8-27b", temperature=0.2, json_mode=False, max_tokens=600):
     headers = {
@@ -28,27 +28,27 @@ def siusti_uzklausa(messages, modelis="qwen/qwen3.8-27b", temperature=0.2, json_
 
 def ieskoti_internete(data_str):
     tavily_key = os.environ.get("TAVILY_API_KEY")
-    url = "https://api.tavily.com" + "/search"
+    url = "https://tavily.com" + "/search"
     payload = {
         "api_key": tavily_key,
-        "query": f"renginiai koncertai parodos festivaliai Vilniuje {data_str[:7]}",
+        "query": f"renginiai koncertai parodos festivaliai Vilniuje nuo {data_str}",
         "search_depth": "basic",
         "max_results": 7
     }
     atsakas = requests.post(url, json=payload, timeout=15)
     atsakas.raise_for_status()
     rezultatai = atsakas.json().get("results", [])
-    return "\n".join([f"- {r['title']}: {r['content']}" for r in rezultatai])
+    return "\n".join([f"- {r['title']} (URL: {r['url']}): {r['content']}" for r in rezultatai])
 
 def rasti_rengini(data_str, draudziami):
     rasti_duomenys = ieskoti_internete(data_str)
     sablonas = nuskaityti_faila("prompts/redaktorius.txt")
     tekstas = sablonas.replace("{siandienos_data}", data_str)
     tekstas = tekstas.replace("{draudziami_renginiai}", draudziami)
-    tekstas += f"\n\nŠtai naujausi įrašai iš Vilniaus portalų (atrink tik tai, kas susiję su renginiais, koncertais, parodomis ar pramogomis Vilniuje):\n{rasti_duomenys}"
+    tekstas += f"\n\nŠtai ką radome internete:\n{rasti_duomenys}"
     
     messages = [{"role": "user", "content": tekstas}]
-    return siusti_uzklausa(messages, modelis="qwen/qwen3.8-27b", temperature=0.2, max_tokens=250)
+    return siusti_uzklausa(messages, modelis="qwen/qwen3.8-27b", temperature=0.1, max_tokens=300)
 
 def parasyti_straipsni(faktai):
     sablonas = nuskaityti_faila("prompts/zurnalistas.txt")
@@ -56,13 +56,13 @@ def parasyti_straipsni(faktai):
     nurodymas = (
         '\n\nGrąžink TIK gryną JSON objektą be jokio papildomo teksto su šiais raktais: '
         '"event_name", "event_name_en", "event_date", "event_date_en", "location", "location_en", '
-        '"title", "title_en", "summary", "summary_en", "content", "content_en", "image_prompt".'
+        '"title", "title_en", "summary", "summary_en", "content", "content_en", "source_url", "image_prompt".'
     )
     messages = [{"role": "user", "content": tekstas + nurodymas}]
     atsakas = siusti_uzklausa(
         messages, 
         modelis="openai/gpt-oss-120b", 
-        temperature=0.7, 
+        temperature=0.5, 
         json_mode=True, 
         max_tokens=3500
     )
