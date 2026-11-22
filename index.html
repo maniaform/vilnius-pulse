@@ -205,9 +205,14 @@
             `).join('');
         }
 
-        function openModal(articleIndex) {
+       function openModal(articleIndex) {
             const art = allArticles[articleIndex];
             if (!art) return;
+
+            const t = uiText[currentLang];
+            const linkHtml = art.source_url && art.source_url.startsWith('http')
+                ? `<a href="${art.source_url}" target="_blank" rel="noopener noreferrer" class="ticket-btn" style="margin-top: 24px;">${t.moreInfo}</a>`
+                : '';
 
             document.getElementById('modal-body-content').innerHTML = `
                 <div class="article-header-row">
@@ -223,6 +228,7 @@
                 <div class="article-content">
                     ${formatParagraphs(getField(art, 'content'))}
                 </div>
+                ${linkHtml}
             `;
             document.getElementById('article-modal').classList.add('active');
             document.body.style.overflow = 'hidden';
