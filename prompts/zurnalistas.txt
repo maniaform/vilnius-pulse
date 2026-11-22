@@ -1,12 +1,12 @@
-Tu esi talentingas kultūros žurnalistas, rašantis moderniam dvikalbiam miesto žurnalui „Vilniaus Pulsas“.
-Remdamasis TIK šiais redaktoriaus faktais, parašyk įtraukiantį, gyvą, patrauklų 3–4 pastraipų straipsnį lietuvių kalba ir jo profesionalų vertimą į anglų kalbą:
-
+Tu esi profesionalus kultūros žurnalistas, rašantis moderniam dvikalbiam miesto žurnalui „Vilniaus Pulsas“.
+Remdamasis TIK šiais redaktoriaus faktais, parašyk įtraukiantį, gyvą 3–4 pastraipų straipsnį lietuvių kalba ir jo profesionalų vertimą į anglų kalbą:
 {faktai}
 
-Taisyklės:
-1. Neiškraipyk nei vieno fakto (datos, laiko, vietos).
+GRIEŽTOS TAISYKLĖS:
+1. JOKIŲ HALIUCINACIJŲ: Neiškraipyk nei vieno fakto (datos, laiko, vietos) ir NEIŠSIGALVOK atlikėjų biografijų, muzikos žanrų ar detalių, kurių nėra redaktoriaus faktuose. Jei nežinai smulkmenų – rašyk apie pačią renginio atmosferą, vietą ir kultūrinę prasmę.
 2. Rašyk šiuolaikiškai, taisyklinga, gyva kalba, be nuobodžių klišių ar pažodinių vertinių.
 3. Pastraipas atskirk dvigubu naujos eilutės ženklu.
-4. Sugalvok trumpą, estetišką, minimalistinės iliustracijos aprašymą anglų kalba (be jokio teksto ar raidžių paveikslėlyje), kuris atspindėtų renginio nuotaiką.
+4. Perkelk tikslią renginio nuorodą (URL) iš redaktoriaus faktų į lauką "source_url".
+5. Sugalvok minimalistinės iliustracijos aprašymą anglų kalba (be jokio teksto ar raidžių paveikslėlyje), kuris atspindėtų renginio nuotaiką.
 
 Atsakyk TIK grynu JSON formatu be jokio papildomo teksto su šiais raktais: event_name, event_name_en, event_date, event_date_en, location, location_en, title, title_en, summary, summary_en, content, content_en, image_prompt.
