@@ -4,7 +4,7 @@ import requests
 from storage import nuskaityti_faila
 
 API_KEY = os.environ.get("GROQ_API_KEY")
-GROQ_URL = "https://groq.com" + "/openai/v1/chat/completions"
+GROQ_URL = "https://" + "api.groq.com" + "/openai/v1/chat/completions"
 
 def siusti_uzklausa(messages, modelis="qwen/qwen3.8-27b", temperature=0.2, json_mode=False, max_tokens=600):
     headers = {
