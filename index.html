@@ -70,7 +70,8 @@
                 archiveTitle: 'Ankstesni atradimai',
                 noArchive: 'Daugiau įrašų atsiras rytoj 07:00.',
                 footer1: '<strong>Vilniaus Pulsas</strong> — autonominis sostinės kultūros gidas.',
-                footer2: 'Atranką, faktų patikrą, tekstus ir iliustracijas kasdien kuria DI agentų sistema.'
+                footer2: 'Atranką, faktų patikrą, tekstus ir iliustracijas kasdien kuria DI agentų sistema.',
+                moreInfo: 'Renginio puslapis / Bilietai ↗'
             },
             en: {
                 brand: 'Vilnius <span>Pulse.</span>',
@@ -84,7 +85,8 @@
                 archiveTitle: 'Past Discoveries',
                 noArchive: 'More discoveries arriving tomorrow at 07:00.',
                 footer1: '<strong>Vilnius Pulse</strong> — autonomous cultural guide to the capital.',
-                footer2: 'Curation, fact-checking, copywriting, and illustrations powered daily by AI agents.'
+                footer2: 'Curation, fact-checking, copywriting, and illustrations powered daily by AI agents.',
+                moreInfo: 'Event Page / Tickets ↗'
             }
         };
 
@@ -159,6 +161,10 @@
 
         function renderTicket(article) {
             const t = uiText[currentLang];
+            const linkHtml = article.source_url && article.source_url.startsWith('http')
+                ? `<a href="${article.source_url}" target="_blank" rel="noopener noreferrer" class="ticket-btn">${t.moreInfo}</a>`
+                : '';
+
             document.getElementById('ticket-section').innerHTML = `
                 <div class="ticket-box">
                     <span class="ticket-label">${t.ticketLabel}</span>
@@ -171,6 +177,7 @@
                         <span>📍</span>
                         <span><strong>${t.where}</strong> ${getField(article, 'location')}</span>
                     </div>
+                    ${linkHtml}
                     <hr class="ticket-divider">
                     <div class="ticket-footer">
                         ${t.published} ${article.date_published} • ${t.verified}
