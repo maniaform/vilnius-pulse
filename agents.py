@@ -28,7 +28,7 @@ def siusti_uzklausa(messages, modelis="qwen/qwen3.8-27b", temperature=0.2, json_
 
 def ieskoti_internete(data_str):
     tavily_key = os.environ.get("TAVILY_API_KEY")
-    url = "https://tavily.com" + "/search"
+    url = "https://api.tavily.com" + "/search"
     payload = {
         "api_key": tavily_key,
         "query": f"renginiai koncertai parodos festivaliai Vilniuje nuo {data_str}",
