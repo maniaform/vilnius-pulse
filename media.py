@@ -50,7 +50,7 @@ def ieskoti_wikimedia(uzklausa, headers):
             img_url = duomenys.get("thumburl") or duomenys.get("url")
             if img_url and img_url.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
                 img_res = requests.get(img_url, headers=headers, timeout=15)
-                if img_res.ok and len(img_res.content) > 15000:
+                if img_res.ok and len(img_res.content) > 5000:
                     return img_res.content
     return None
 
@@ -65,12 +65,12 @@ def sukurti_paveiksleli(aprasymas, failo_vardas):
     
     kandidatai = []
     if raktiniai:
-        kandidatai.append(" ".join(raktiniai) + " photography")
+        kandidatai.append(" ".join(raktiniai))
     kandidatai.extend([
-        "Vilnius Old Town architecture",
-        "Vilnius Cathedral Square",
-        "Symphony orchestra stage",
-        "Contemporary art museum interior"
+        "Vilnius Old Town",
+        "Vilnius Cathedral",
+        "Symphony orchestra",
+        "Art gallery"
     ])
 
     for fraze in kandidatai:
