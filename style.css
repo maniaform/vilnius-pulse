@@ -145,13 +145,13 @@ h1, h2, h3, h4, .serif-title {
 }
 
 .mini-thumbnail {
-    width: 112px;
-    height: 112px;
+    width: 165px;
+    height: 165px;
     flex-shrink: 0;
-    border-radius: 14px;
+    border-radius: 16px;
     overflow: hidden;
     border: 2px solid var(--text-primary);
-    box-shadow: 4px 4px 0px var(--text-primary);
+    box-shadow: 6px 6px 0px var(--accent-indigo);
     background: var(--bg-dark);
 }
 
