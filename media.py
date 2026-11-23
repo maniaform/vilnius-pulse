@@ -23,13 +23,17 @@ def sukurti_paveiksleli(aprasymas, failo_vardas):
     except Exception:
         pass
 
-    # 2 bandymas: Tikslinga nuotraukų paieška per Wikimedia Commons (be jokio API rakto)
+    # 2 bandymas: Tikslinga nuotraukų paieška per Wikimedia Commons (pagal 3 raktinius žodžius)
     try:
+        import re
+        svarus_zodziai = re.sub(r'[^a-zA-Z0-9\s]', '', aprasymas).split()[:3]
+        paieskos_raktas = " ".join(svarus_zodziai) if svarus_zodziai else "Vilnius architecture"
+        
         wiki_url = "https://" + "commons.wikimedia.org" + "/w/api.php"
         params = {
             "action": "query",
             "generator": "search",
-            "gsrsearch": f"filetype:bitmap {aprasymas}",
+            "gsrsearch": f"filetype:bitmap {paieskos_raktas}",
             "gsrnamespace": 6,
             "gsrlimit": 5,
             "prop": "imageinfo",
@@ -42,14 +46,15 @@ def sukurti_paveiksleli(aprasymas, failo_vardas):
         for p in puslapiai.values():
             info = p.get("imageinfo", [])
             if info:
-                img_url = info[0].get("thumburl") or info[0].get("url")
+                img_url = info.get("thumburl") or info.get("url")
                 if img_url:
                     img_res = requests.get(img_url, headers=headers, timeout=15)
                     if img_res.ok and len(img_res.content) > 10000:
                         with open(pilnas_kelias, "wb") as f:
                             f.write(img_res.content)
+                        print(f"Parsiųsta tikra nuotrauka pagal: {paieskos_raktas}")
                         return pilnas_kelias
-    except Exception:
-        pass
+    except Exception as e:
+        print("Paieškos klaida:", e)
 
     return pilnas_kelias
