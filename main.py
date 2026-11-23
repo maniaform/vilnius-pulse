@@ -1,3 +1,4 @@
+from seo import generuoti_seo_puslapius
 from datetime import datetime
 from storage import gauti_istorija, issaugoti_straipsni
 from agents import rasti_rengini, parasyti_straipsni
@@ -38,6 +39,9 @@ def paleisti_redakcija():
         "source_url": straipsnis.get("source_url", ""),
         "image_url": paveikslo_kelias
     }
+
+    visi_atnaujinti = generuoti_seo_puslapius([galutinis_irasas] + seni_straipsniai)
+    issaugoti_straipsni(visi_atnaujinti[1:], visi_atnaujinti[0])
 
     issaugoti_straipsni(seni_straipsniai, galutinis_irasas)
     print("Sėkmingai išsaugota į articles.json!")
