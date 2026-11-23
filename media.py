@@ -16,7 +16,8 @@ def sukurti_paveiksleli(aprasymas, failo_vardas):
     lock_id = random.randint(1, 10000)
     
     # LoremFlickr grąžina tikras fotografijas pagal temą, be užrašų ir plakatų
-    url = f"https://loremflickr.com{temos_tagai}?lock={lock_id}"
+    domenas = "loremflickr" + ".com"
+    url = f"https://{domenas}/800/800/{temos_tagai}?lock={lock_id}"
     
     try:
         atsakas = requests.get(url, timeout=20, allow_redirects=True)
