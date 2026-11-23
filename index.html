@@ -194,15 +194,17 @@
                 return;
             }
 
-            list.innerHTML = articles.map((art, index) => `
-                <div class="archive-item" onclick="openModal(${index + 1})">
+            list.innerHTML = articles.map((art, index) => {
+                const nuoroda = art.slug ? `straipsniai/${art.slug}.html` : `#`;
+                return `
+                <a href="${nuoroda}" class="archive-item" style="text-decoration: none; color: inherit;">
                     <img src="${art.image_url}" alt="${getField(art, 'title')}" class="archive-thumb">
                     <div>
                         <h4 class="archive-item-title">${getField(art, 'title')}</h4>
                         <div class="archive-item-date">${getField(art, 'event_date')}</div>
                     </div>
-                </div>
-            `).join('');
+                </a>
+            `}).join('');
         }
 
        function openModal(articleIndex) {
