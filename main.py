@@ -42,9 +42,7 @@ def paleisti_redakcija():
 
     visi_atnaujinti = generuoti_seo_puslapius([galutinis_irasas] + seni_straipsniai)
     issaugoti_straipsni(visi_atnaujinti[1:], visi_atnaujinti[0])
-
-    issaugoti_straipsni(seni_straipsniai, galutinis_irasas)
-    print("Sėkmingai išsaugota į articles.json!")
+    print("Sėkmingai išsaugota į articles.json ir sugeneruoti SEO puslapiai!")
 
 if __name__ == "__main__":
     paleisti_redakcija()
