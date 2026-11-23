@@ -8,9 +8,9 @@ with open("articles.json", "r", encoding="utf-8") as f:
 
 for art in straipsniai:
     unikalus_id = art.get("id", f"renginys-{int(time.time())}")
-    paieskos_fraze = f"{art.get('event_name', '')} {art.get('location', 'Vilnius')}"
+    paieskos_fraze = f"{art.get('event_name_en', art.get('event_name', ''))} {art.get('location_en', 'Vilnius')}"
     
-    print(f"Ieškoma nuotraukos renginiui: {paieskos_fraze}...")
+    print(f"Ieškoma nuotraukos: {paieskos_fraze}...")
     naujas_kelias = sukurti_paveiksleli(paieskos_fraze, unikalus_id)
     art["image_url"] = naujas_kelias
     time.sleep(2)
@@ -20,4 +20,4 @@ atnaujinti = generuoti_seo_puslapius(straipsniai)
 with open("articles.json", "w", encoding="utf-8") as f:
     json.dump(atnaujinti, f, ensure_ascii=False, indent=2)
 
-print("Visi paveikslėliai ir SEO puslapiai sėkmingai atnaujinti!")
+print("Visi paveikslėliai sėkmingai atnaujinti!")
