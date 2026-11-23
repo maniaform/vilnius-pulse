@@ -1,22 +1,23 @@
-import os
 import json
 import time
 from media import sukurti_paveiksleli
+from seo import generuoti_seo_puslapius
 
 with open("articles.json", "r", encoding="utf-8") as f:
     straipsniai = json.load(f)
 
 for art in straipsniai:
-    kelias = art.get("image_url", "")
-    if not kelias:
-        continue
-        
-    failo_vardas = os.path.splitext(os.path.basename(kelias))[0]
-    tema = art.get("title_en") or art.get("title", "Vilnius cultural event")
-    aprasymas = f"Artistic visual metaphor for: {tema}, Vilnius atmosphere"
+    unikalus_id = art.get("id", f"renginys-{int(time.time())}")
+    paieskos_fraze = f"{art.get('event_name', '')} {art.get('location', 'Vilnius')}"
     
-    print(f"Atnaujinamas: {failo_vardas}...")
-    sukurti_paveiksleli(aprasymas, failo_vardas)
-    time.sleep(3)
+    print(f"Ieškoma nuotraukos renginiui: {paieskos_fraze}...")
+    naujas_kelias = sukurti_paveiksleli(paieskos_fraze, unikalus_id)
+    art["image_url"] = naujas_kelias
+    time.sleep(2)
 
-print("Visi paveikslėliai sėkmingai atnaujinti!")
+atnaujinti = generuoti_seo_puslapius(straipsniai)
+
+with open("articles.json", "w", encoding="utf-8") as f:
+    json.dump(atnaujinti, f, ensure_ascii=False, indent=2)
+
+print("Visi paveikslėliai ir SEO puslapiai sėkmingai atnaujinti!")
