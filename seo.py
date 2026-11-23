@@ -108,7 +108,8 @@ def generuoti_seo_puslapius(straipsniai):
             f.write(html)
 
     # 1. Generuojame sitemap.xml
-    xml_eilutes = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://sitemaps.org">']
+    ns = "http://" + "www.sitemaps.org/schemas/sitemap/0.9"
+    xml_eilutes = ['<?xml version="1.0" encoding="UTF-8"?>', f'<urlset xmlns="{ns}">']
     for u in sitemap_urls:
         xml_eilutes.append(f"  <url><loc>{u}</loc></url>")
     xml_eilutes.append("</urlset>")
