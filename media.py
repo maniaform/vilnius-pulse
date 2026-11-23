@@ -46,7 +46,7 @@ def sukurti_paveiksleli(aprasymas, failo_vardas):
         for p in puslapiai.values():
             info = p.get("imageinfo", [])
             if info:
-                img_url = info.get("thumburl") or info.get("url")
+               img_url = info[0].get("thumburl") or info[0].get("url")
                 if img_url:
                     img_res = requests.get(img_url, headers=headers, timeout=15)
                     if img_res.ok and len(img_res.content) > 10000:
