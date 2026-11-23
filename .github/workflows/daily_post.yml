@@ -2,9 +2,8 @@ name: Dienos renginio generavimas
 
 on:
   schedule:
-    # Paleidžia kasdien 05:00 UTC laiku (tai yra 07:00 ryte Lietuvos laiku)
     - cron: '0 5 * * *'
-  workflow_dispatch: # Leidžia paleisti rankiniu būdu mygtuko paspaudimu bet kada
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -24,16 +23,16 @@ jobs:
       - name: Įdiegti bibliotekas
         run: pip install requests
 
-      - name: Paleisti DI redakciją
+      - name: Paleisti DI redakciją ir SEO generatorių
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
-       run: python main.py
+        run: python main.py
 
-      - name: Išsaugoti naują straipsnį ir paveikslėlį
+      - name: Išsaugoti naują straipsnį, paveikslėlį ir SEO failus
         run: |
           git config --local user.email "bot@vilniauspulsas.lt"
           git config --local user.name "DI Redakcija"
           git add articles.json images/ straipsniai/ sitemap.xml robots.txt
-          git commit -m "Naujas dienos renginys" || exit 0
+          git commit -m "Naujas dienos renginys ir SEO atnaujinimas" || exit 0
           git push
