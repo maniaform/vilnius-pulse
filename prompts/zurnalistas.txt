@@ -7,6 +7,6 @@ GRIEŽTOS TAISYKLĖS:
 2. Rašyk šiuolaikiškai, taisyklinga, gyva kalba, be nuobodžių klišių ar pažodinių vertinių.
 3. Pastraipas atskirk dvigubu naujos eilutės ženklu.
 4. Perkelk tikslią renginio nuorodą (URL) iš redaktoriaus faktų į lauką "source_url".
-5. Sugalvok minimalistinės iliustracijos aprašymą anglų kalba (be jokio teksto ar raidžių paveikslėlyje), kuris atspindėtų renginio nuotaiką.
+5. Laukui "image_prompt" sugalvok ryškų, meninį ir metaforišką iliustracijos siužetą anglų kalba (pvz., ne tiesiog „žmonės salėje“, o įspūdingą vizualinį simbolį, susijusį su renginio tema ir Vilniaus atmosfera; griežtai be jokio teksto ar raidžių).
 
 Atsakyk TIK grynu JSON formatu be jokio papildomo teksto su šiais raktais: event_name, event_name_en, event_date, event_date_en, location, location_en, title, title_en, summary, summary_en, content, content_en, image_prompt.
