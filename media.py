@@ -20,14 +20,20 @@ def sukurti_paveiksleli(aprasymas, failo_vardas):
     
     try:
         atsakas = requests.get(url, timeout=45)
-        if atsakas.ok and "image" in atsakas.headers.get("Content-Type", ""):
+        if atsakas.ok and "image" in atsakas.headers.get("Content-Type", "") and len(atsakas.content) > 5000:
             with open(pilnas_kelias, "wb") as f:
                 f.write(atsakas.content)
             return pilnas_kelias
     except Exception:
         pass
 
-    atsarginis = requests.get("https://picsum.photos", timeout=15)
-    with open(pilnas_kelias, "wb") as f:
-        f.write(atsarginis.content)
+    try:
+        atsarginis = requests.get("https://" + "picsum.photos/800/800", timeout=20, allow_redirects=True)
+        if atsarginis.ok and len(atsarginis.content) > 5000:
+            with open(pilnas_kelias, "wb") as f:
+                f.write(atsarginis.content)
+            return pilnas_kelias
+    except Exception:
+        pass
+
     return pilnas_kelias
