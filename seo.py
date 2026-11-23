@@ -2,7 +2,7 @@ import os
 import re
 import json
 
-BASE_URL = "https://vercel.app"
+BASE_URL = "https://" + "vilnius-pulse.vercel.app"
 
 def sukurti_slug(tekstas):
     tekstas = tekstas.lower()
