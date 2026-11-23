@@ -34,6 +34,6 @@ jobs:
         run: |
           git config --local user.email "bot@vilniauspulsas.lt"
           git config --local user.name "DI Redakcija"
-          git add articles.json images/
+          git add articles.json images/ straipsniai/ sitemap.xml robots.txt
           git commit -m "Naujas dienos renginys" || exit 0
           git push
