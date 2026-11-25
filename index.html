@@ -31,9 +31,10 @@
     <main class="container editorial-layout">
         <div>
             <section id="featured-section"></section>
-            <!-- Kuro kainų švieslentė -->
-            <div style="margin-top: 28px; display: flex; justify-content: center;">
+            <!-- Kuro ir EV įkrovimo kainų švieslentės -->
+            <div style="margin-top: 28px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
                 <iframe src="https://benzinas-lt.vercel.app/widget.html" width="100%" height="190" frameborder="0" scrolling="no" style="border:none; border-radius:12px; max-width:400px; overflow:hidden; display:block;"></iframe>
+                <iframe src="https://ev-kainos-lt.vercel.app/" width="100%" height="190" frameborder="0" scrolling="no" style="border:none; border-radius:12px; max-width:400px; overflow:hidden; display:block;"></iframe>
             </div>
         </div>
 
